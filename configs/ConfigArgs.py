@@ -13,6 +13,10 @@ g_args_need = [{
         'args': ['-f', '--file'],
         'action': None,
         'help': 'sample picture used for searching'
+    }, {
+        'args': ['-d', '--database'],
+        'action': None,
+        'help': 'directory of database which stores the fingerprint of pictures'
     }
 ]
 
