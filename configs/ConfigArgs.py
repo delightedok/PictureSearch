@@ -50,12 +50,26 @@ def config_args_parse():
     ap = argparse.ArgumentParser()
     for arg in g_args_need:
         if arg['action'] is not None:
-            ap.add_argument(*arg['args'], required=True, help=arg['help'], action=arg['action'])
+            if 'default' in arg:
+                ap.add_argument(*arg['args'], required=True, help=arg['help'],
+                                action=arg['action'], default=arg['default'])
+            else:
+                ap.add_argument(*arg['args'], required=True, help=arg['help'],
+                                action=arg['action'])
         else:
-            ap.add_argument(*arg['args'], required=True, help=arg['help'])
+            if 'default' in arg:
+                ap.add_argument(*arg['args'], required=True, help=arg['help'], default=arg['default'])
+            else:
+                ap.add_argument(*arg['args'], required=True, help=arg['help'])
     for arg in g_args_optional:
         if arg['action'] is not None:
-            ap.add_argument(*arg['args'], help=arg['help'], action=arg['action'])
+            if 'default' in arg:
+                ap.add_argument(*arg['args'], help=arg['help'], action=arg['action'], default=arg['default'])
+            else:
+                ap.add_argument(*arg['args'], help=arg['help'], action=arg['action'])
         else:
-            ap.add_argument(*arg['args'], help=arg['help'])
+            if 'default' in arg:
+                ap.add_argument(*arg['args'], help=arg['help'], default=arg['default'])
+            else:
+                ap.add_argument(*arg['args'], help=arg['help'])
     return ap.parse_args()
