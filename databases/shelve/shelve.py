@@ -17,7 +17,6 @@ class ShelveHandler:
     def set_db_filename(self, filename):
         if self.run is False:
             self.db_filename = filename
-            CommonLog.log_d(self.db_filename)
         else:
             CommonLog.log_e('ShelveHandler is running now')
 
@@ -68,7 +67,10 @@ class ShelveHandler:
 
     def get_value(self, key):
         if self.run is True:
-            return self.db[key]
+            if key in self.db:
+                return self.db[key]
+            else:
+                return None
         else:
             CommonLog.log_e('ShelveHandler is not running now')
             return None
