@@ -24,3 +24,7 @@ JPG PNG
 查看帮助
 
 [python path]\python.exe main.py -h
+
+# 联系方式
+
+jieshentan@outlook.com
