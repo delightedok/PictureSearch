@@ -14,7 +14,6 @@ def analyse_picture_in_directory(path, suffix_list):
     for suffix in suffix_list:
         for picture_path in glob.glob(path + '\*.' + suffix):
             # CommonLog.log_d(picture_path)
-            image = None
             if suffix.lower() == 'png':
                 image = Image.open(picture_path).convert('RGBA')
             else:
