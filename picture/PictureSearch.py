@@ -11,7 +11,9 @@ from picture import PictureCommons
 def _is_similar(picture_hash, fp_list):
     similar_list = list()
     for fp in fp_list:
-        if picture_hash == fp[PictureCommons.PICTURE_COMMON_KEY_FINGERPRINT]:
+        # if picture_hash == fp[PictureCommons.PICTURE_COMMON_KEY_FINGERPRINT]:
+        if PictureCommons.get_hamming_distance_standard() > \
+                PictureCommons.get_hamming_distance(picture_hash, fp[PictureCommons.PICTURE_COMMON_KEY_FINGERPRINT]):
             similar_list.append(fp[PictureCommons.PICTURE_COMMON_KEY_FILENAME])
     return similar_list
 
