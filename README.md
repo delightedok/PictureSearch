@@ -13,6 +13,9 @@ Pillow
 # 语言
 Python3
 
+# 平台
+Windows
+
 # 支持的图片格式
 JPG PNG
 
