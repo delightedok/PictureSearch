@@ -7,6 +7,7 @@ import imagehash
 from PIL import Image
 from Log import CommonLog
 from picture import PictureCommons
+from picture import PictureInfo
 
 
 def analyse_picture_in_directory(path, suffix_list):
@@ -22,5 +23,6 @@ def analyse_picture_in_directory(path, suffix_list):
             fp_dict = dict()
             fp_dict[PictureCommons.PICTURE_COMMON_KEY_FILENAME] = picture_path
             fp_dict[PictureCommons.PICTURE_COMMON_KEY_FINGERPRINT] = image_hash
+            fp_dict[PictureCommons.PICTURE_COMMON_KEY_INFO] = PictureInfo.get_picture_info_by_image(image)
             fp_list.append(fp_dict)
     return fp_list

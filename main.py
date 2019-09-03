@@ -22,7 +22,7 @@ if __name__ == '__main__':
     else:
         CommonLog.log_i('Load fingerprints form database.')
 
-    match_list = PictureSearch.search_picture_in_list(args.file, fp_list)
+    match_list = PictureSearch.search_picture_in_list_by_content(args.file, fp_list)
     for file in match_list:
         CommonLog.log_i('Result: ', file)
 
