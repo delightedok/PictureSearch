@@ -8,6 +8,8 @@ from io import BytesIO
 
 PICTURE_COMMON_KEY_FILENAME = 'filename'
 PICTURE_COMMON_KEY_FINGERPRINT = 'fingerprint'
+PICTURE_COMMON_KEY_FORMAT = 'format'
+PICTURE_COMMON_KEY_RESOLUTION = 'resolution'
 
 
 g_resize_width = 9
