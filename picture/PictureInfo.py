@@ -23,3 +23,12 @@ def get_picture_info_by_image(image):
         info[PictureCommons.PICTURE_COMMON_KEY_FORMAT] = image.format
         info[PictureCommons.PICTURE_COMMON_KEY_RESOLUTION] = image.size
     return info
+
+
+def get_pixel_of_filename(filename, x, y):
+    image = Image.open(filename)
+    return get_pixel_of_image(image, x, y)
+
+
+def get_pixel_of_image(image, x, y):
+    return image.getpixel((x, y))
