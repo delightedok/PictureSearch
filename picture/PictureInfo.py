@@ -8,11 +8,8 @@ from picture import PictureCommons
 
 
 def get_picture_info(filename):
-    info = dict()
     image = Image.open(filename)
-    info[PictureCommons.PICTURE_COMMON_KEY_FILENAME] = filename
-    info[PictureCommons.PICTURE_COMMON_KEY_FORMAT] = image.format
-    info[PictureCommons.PICTURE_COMMON_KEY_RESOLUTION] = image.size
+    info = get_picture_info_by_image(image)
     return info
 
 
