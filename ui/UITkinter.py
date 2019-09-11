@@ -92,6 +92,7 @@ def _init_ttk_styles():
     style = ttk.Style()
     style.configure('Content.TFrame', background=g_attributes['background'])
     style.configure('Label.TLabel', background=g_attributes['background'], foreground='white')
+    style.configure('Entry.TEntry', width=100)
 
 
 def _update_entry(view, data):
@@ -116,6 +117,15 @@ def _update():
             g_data_dict[data]['update'] = False
 
 
+def _add_file_update_entry(entry_type):
+    global g_data_dict
+    filename = tkinter.filedialog.askopenfilename()
+    if filename is not None and '' != filename:
+        g_data_dict[entry_type]['data'].append(filename)
+        g_data_dict[entry_type]['update'] = True
+        _update()
+
+
 def _choose_file_update_entry(entry_type):
     global g_data_dict
     filename = tkinter.filedialog.askopenfilename()
@@ -138,6 +148,18 @@ def _choose_database():
     _choose_file_update_entry('database')
 
 
+def _add_file():
+    _add_file_update_entry('file')
+
+
+def _add_path():
+    _add_file_update_entry('path')
+
+
+def _add_database():
+    _add_file_update_entry('database')
+
+
 def _init_main_view(root):
     global g_data_dict
     global g_attributes
@@ -147,21 +169,25 @@ def _init_main_view(root):
     label_path = ttk.Label(content, text='Path:', style='Label.TLabel', font=('Times New Roman', 12, 'normal'))
     label_database = ttk.Label(content, text='Database:', style='Label.TLabel', font=('Times New Roman', 12, 'normal'))
 
-    entry_file = ttk.Entry(content)
-    entry_path = ttk.Entry(content)
-    entry_database = ttk.Entry(content)
+    entry_file = ttk.Entry(content, style='Entry.TEntry')
+    entry_path = ttk.Entry(content, style='Entry.TEntry')
+    entry_database = ttk.Entry(content, style='Entry.TEntry')
 
     button_file = ttk.Button(content, text='Choose File', command=_choose_file)
+    button_file_add = ttk.Button(content, text='Add File', command=_add_file)
     button_path = ttk.Button(content, text='Choose Path', command=_choose_path)
+    button_path_add = ttk.Button(content, text='Add Path', command=_add_path)
     button_database = ttk.Button(content, text='Choose Database', command=_choose_database)
 
     label_file.grid(row=0, column=0, sticky=W)
     entry_file.grid(row=1, column=0, sticky=W)
     button_file.grid(row=1, column=1, sticky=W)
+    button_file_add.grid(row=1, column=2, sticky=W)
     # content.columnconfigure(0, minsize=15)
     label_path.grid(row=2, column=0, sticky=W)
     entry_path.grid(row=3, column=0, sticky=W)
     button_path.grid(row=3, column=1, sticky=W)
+    button_path_add.grid(row=3, column=2, sticky=W)
     # content.columnconfigure(1, minsize=15)
     label_database.grid(row=4, column=0, sticky=W)
     entry_database.grid(row=5, column=0, sticky=W)
