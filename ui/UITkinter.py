@@ -4,6 +4,7 @@
 
 from tkinter import *
 import tkinter.messagebox
+import tkinter.filedialog
 from tkinter import ttk
 from Log import CommonLog
 
@@ -11,6 +12,27 @@ from Log import CommonLog
 LEVEL_INFO = 0
 LEVEL_WARNING = 1
 LEVEL_ERROR = 2
+
+g_data_dict = {
+    'file': {
+        'data': [],
+        'update': False,
+        'view': None,
+        'view_type': 'Entry'
+    },
+    'path': {
+        'data': [],
+        'update': False,
+        'view': None,
+        'view_type': 'Entry'
+    },
+    'database': {
+        'data': [],
+        'update': False,
+        'view': None,
+        'view_type': 'Entry'
+    }
+}
 
 
 def _show_message_mb(title, level, message):
@@ -72,7 +94,52 @@ def _init_ttk_styles():
     style.configure('Label.TLabel', background=g_attributes['background'], foreground='white')
 
 
+def _update_entry(view, data):
+    text_var = ''
+    for text in data['data']:
+        text_var += text + ';'
+    if len(text_var) > 0:
+        text_var = text_var[: len(text_var) - 1]
+    CommonLog.log_d('file: {}'.format(text_var))
+    view.delete(0, END)  # clear the value
+    view.insert(0, text_var)  # set the value
+
+
+def _update():
+    global g_data_dict
+    for data in g_data_dict:
+        if g_data_dict[data]['update'] is True:
+            view = g_data_dict[data]['view']
+            view_type = g_data_dict[data]['view_type']
+            if view_type == 'Entry':
+                _update_entry(view, g_data_dict[data])
+            g_data_dict[data]['update'] = False
+
+
+def _choose_file_update_entry(entry_type):
+    global g_data_dict
+    filename = tkinter.filedialog.askopenfilename()
+    if filename is not None and '' != filename:
+        g_data_dict[entry_type]['data'].clear()
+        g_data_dict[entry_type]['data'].append(filename)
+        g_data_dict[entry_type]['update'] = True
+        _update()
+
+
+def _choose_file():
+    _choose_file_update_entry('file')
+
+
+def _choose_path():
+    _choose_file_update_entry('path')
+
+
+def _choose_database():
+    _choose_file_update_entry('database')
+
+
 def _init_main_view(root):
+    global g_data_dict
     global g_attributes
     content = ttk.Frame(root, padding=(10, 10, 10, 10), style='Content.TFrame')
 
@@ -80,16 +147,34 @@ def _init_main_view(root):
     label_path = ttk.Label(content, text='Path:', style='Label.TLabel', font=('Times New Roman', 12, 'normal'))
     label_database = ttk.Label(content, text='Database:', style='Label.TLabel', font=('Times New Roman', 12, 'normal'))
 
+    entry_file = ttk.Entry(content)
+    entry_path = ttk.Entry(content)
+    entry_database = ttk.Entry(content)
+
+    button_file = ttk.Button(content, text='Choose File', command=_choose_file)
+    button_path = ttk.Button(content, text='Choose Path', command=_choose_path)
+    button_database = ttk.Button(content, text='Choose Database', command=_choose_database)
+
     label_file.grid(row=0, column=0, sticky=W)
-    content.columnconfigure(0, minsize=15)
-    label_path.grid(row=1, column=0, sticky=W)
-    content.columnconfigure(1, minsize=15)
-    label_database.grid(row=2, column=0, sticky=W)
-    content.columnconfigure(2, minsize=15)
+    entry_file.grid(row=1, column=0, sticky=W)
+    button_file.grid(row=1, column=1, sticky=W)
+    # content.columnconfigure(0, minsize=15)
+    label_path.grid(row=2, column=0, sticky=W)
+    entry_path.grid(row=3, column=0, sticky=W)
+    button_path.grid(row=3, column=1, sticky=W)
+    # content.columnconfigure(1, minsize=15)
+    label_database.grid(row=4, column=0, sticky=W)
+    entry_database.grid(row=5, column=0, sticky=W)
+    button_database.grid(row=5, column=1, sticky=W)
+    # content.columnconfigure(2, minsize=15)
 
     content.grid(row=0, column=0, sticky=(N, S, E, W))
     root.columnconfigure(0, weight=1)
     root.rowconfigure(0, weight=1)
+
+    g_data_dict['file']['view'] = entry_file
+    g_data_dict['path']['view'] = entry_path
+    g_data_dict['database']['view'] = entry_database
 
 
 def _init_views(root):
