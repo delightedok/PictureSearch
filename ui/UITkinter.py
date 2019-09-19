@@ -31,6 +31,18 @@ g_data_dict = {
         'update': False,
         'view': None,
         'view_type': 'Entry'
+    },
+    'use_db': {
+        'data': None,
+        'update': False,
+        'view': None,
+        'view_type': 'Checkbutton'
+    },
+    'find': {
+        'data': None,  # CALLBACK: param[0]: use_db
+        'update': False,
+        'view': None,
+        'view_type': 'Button'
     }
 }
 
@@ -92,7 +104,8 @@ def _init_ttk_styles():
     style = ttk.Style()
     style.configure('Content.TFrame', background=g_attributes['background'])
     style.configure('Label.TLabel', background=g_attributes['background'], foreground='white')
-    style.configure('Entry.TEntry', width=100)
+    style.configure('Entry.TEntry', width=200)
+    style.configure('UseDB.TCheckbutton', background=g_attributes['background'])
 
 
 def _update_entry(view, data):
@@ -117,18 +130,24 @@ def _update():
             g_data_dict[data]['update'] = False
 
 
-def _add_file_update_entry(entry_type):
+def _add_file_update_entry(entry_type, choose_dir=False):
     global g_data_dict
-    filename = tkinter.filedialog.askopenfilename()
+    if choose_dir is False:
+        filename = tkinter.filedialog.askopenfilename()
+    else:
+        filename = tkinter.filedialog.askdirectory()
     if filename is not None and '' != filename:
         g_data_dict[entry_type]['data'].append(filename)
         g_data_dict[entry_type]['update'] = True
         _update()
 
 
-def _choose_file_update_entry(entry_type):
+def _choose_file_update_entry(entry_type, choose_dir=False):
     global g_data_dict
-    filename = tkinter.filedialog.askopenfilename()
+    if choose_dir is False:
+        filename = tkinter.filedialog.askopenfilename()
+    else:
+        filename = tkinter.filedialog.askdirectory()
     if filename is not None and '' != filename:
         g_data_dict[entry_type]['data'].clear()
         g_data_dict[entry_type]['data'].append(filename)
@@ -141,11 +160,11 @@ def _choose_file():
 
 
 def _choose_path():
-    _choose_file_update_entry('path')
+    _choose_file_update_entry('path', True)
 
 
 def _choose_database():
-    _choose_file_update_entry('database')
+    _choose_file_update_entry('database', True)
 
 
 def _add_file():
@@ -153,11 +172,18 @@ def _add_file():
 
 
 def _add_path():
-    _add_file_update_entry('path')
+    _add_file_update_entry('path', True)
 
 
 def _add_database():
-    _add_file_update_entry('database')
+    _add_file_update_entry('database', True)
+
+
+def _find():
+    global g_data_dict
+    if g_data_dict['find']['data'] is not None:
+        g_data_dict['find']['data'](g_data_dict['file']['data'], g_data_dict['path']['data'],
+                                    g_data_dict['database']['data'], g_data_dict['use_db']['data'].get())
 
 
 def _init_main_view(root):
@@ -178,6 +204,11 @@ def _init_main_view(root):
     button_path = ttk.Button(content, text='Choose Path', command=_choose_path)
     button_path_add = ttk.Button(content, text='Add Path', command=_add_path)
     button_database = ttk.Button(content, text='Choose Database', command=_choose_database)
+    button_find = ttk.Button(content, text='Find', command=_find)
+
+    g_data_dict['use_db']['data'] = tkinter.IntVar()
+    cb_database = ttk.Checkbutton(content, text='Load From Database',
+                                  style='UseDB.TCheckbutton', variable=g_data_dict['use_db']['data'])
 
     label_file.grid(row=0, column=0, sticky=W)
     entry_file.grid(row=1, column=0, sticky=W)
@@ -193,6 +224,8 @@ def _init_main_view(root):
     entry_database.grid(row=5, column=0, sticky=W)
     button_database.grid(row=5, column=1, sticky=W)
     # content.columnconfigure(2, minsize=15)
+    cb_database.grid(row=6, column=0, sticky=W)
+    button_find.grid(row=7, column=0, sticky=W)
 
     content.grid(row=0, column=0, sticky=(N, S, E, W))
     root.columnconfigure(0, weight=1)
@@ -201,6 +234,7 @@ def _init_main_view(root):
     g_data_dict['file']['view'] = entry_file
     g_data_dict['path']['view'] = entry_path
     g_data_dict['database']['view'] = entry_database
+    g_data_dict['use_db']['view'] = cb_database
 
 
 def _init_views(root):
@@ -215,6 +249,11 @@ def set_attributes(attributes):
     global g_attributes
     for key in attributes:
         g_attributes[key] = attributes[key]
+
+
+def set_on_find(callback):
+    global g_data_dict
+    g_data_dict['find']['data'] = callback
 
 
 def main_loop():

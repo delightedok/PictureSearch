@@ -11,8 +11,8 @@ UI_TYPE_END = 2
 
 g_ui_type = UI_TYPE_TKINTER
 g_ui_list = [
-    {'func_mainloop': 'func', 'func_set_attributes': 'func'},
-    {'mainloop': UITkinter.main_loop, 'set_attributes': UITkinter.set_attributes},
+    {'func_mainloop': 'func', 'func_set_attributes': 'func', 'func_set_on_find': 'func'},
+    {'mainloop': UITkinter.main_loop, 'set_attributes': UITkinter.set_attributes, 'set_on_find': UITkinter.set_on_find},
 ]
 
 
@@ -28,6 +28,12 @@ def set_attributes(attributes):
     global g_ui_type
     global g_ui_list
     g_ui_list[g_ui_type]['set_attributes'](attributes)
+
+
+def set_on_find(callback):
+    global g_ui_type
+    global g_ui_list
+    g_ui_list[g_ui_type]['set_on_find'](callback)
 
 
 def mainloop():
